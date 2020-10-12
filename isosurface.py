@@ -371,6 +371,7 @@ def main():
     
     print(val)
     print(clip)
+    print(min, max)
     
     # Read data file.
     data = read_file(data_file)
