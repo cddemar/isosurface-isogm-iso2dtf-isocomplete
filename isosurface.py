@@ -80,20 +80,21 @@ def generate_actors(data, val, clip):
     # origins of the planes
     origins = vtk.vtkPoints()
     origins.SetNumberOfPoints(3)
-    if(clip[0]):
-        origins.InsertPoint(0, [clip[0], 0, 0]) # x
-    else:
-        origins.InsertPoint(0, [0, 0, 0]) # x
-        
-    if(clip[1]):
-        origins.InsertPoint(1, [0, clip[1], 0]) # y
-    else:
-        origins.InsertPoint(1, [0, 0, 0]) # y
-        
-    if(clip[2]):
-        origins.InsertPoint(2, [0, 0, clip[1]]) # z
-    else:
-        origins.InsertPoint(2, [0, 0, 0]) # z
+    if(clip):
+        if(clip[0]):
+            origins.InsertPoint(0, [clip[0], 0, 0]) # x
+        else:
+            origins.InsertPoint(0, [0, 0, 0]) # x
+            
+        if(clip[1]):
+            origins.InsertPoint(1, [0, clip[1], 0]) # y
+        else:
+            origins.InsertPoint(1, [0, 0, 0]) # y
+            
+        if(clip[2]):
+            origins.InsertPoint(2, [0, 0, clip[1]]) # z
+        else:
+            origins.InsertPoint(2, [0, 0, 0]) # z
         
     # normal of the planes
     normals = vtk.vtkDoubleArray()
@@ -289,7 +290,7 @@ def generate_gui(actors, val, clip):
     iso_slider_widget.EnabledOn()
     
     # Add x-axis slide bar   
-    x_axis_slide_bar = generate_x_axis_slide_bar(maxX, clip[0])
+    x_axis_slide_bar = generate_x_axis_slide_bar(maxX, clip[0]) if clip else generate_x_axis_slide_bar(maxX, 0)
     x_axis_slider_widget = vtk.vtkSliderWidget()
     x_axis_slider_widget.SetInteractor(renderer_window_interactor)
     x_axis_slider_widget.SetRepresentation(x_axis_slide_bar)
@@ -298,7 +299,7 @@ def generate_gui(actors, val, clip):
     
     
     # Add y-axis slide bar   
-    y_axis_slide_bar = generate_y_axis_slide_bar(maxY, clip[1])
+    y_axis_slide_bar = generate_y_axis_slide_bar(maxY, clip[1]) if clip else generate_y_axis_slide_bar(maxY, 0)
     y_axis_slider_widget = vtk.vtkSliderWidget()
     y_axis_slider_widget.SetInteractor(renderer_window_interactor)
     y_axis_slider_widget.SetRepresentation(y_axis_slide_bar)
@@ -307,7 +308,7 @@ def generate_gui(actors, val, clip):
     
     
     # Add z-axis slide bar   
-    z_axis_slide_bar = generate_z_axis_slide_bar(maxZ, clip[2])
+    z_axis_slide_bar = generate_z_axis_slide_bar(maxZ, clip[2]) if clip else generate_z_axis_slide_bar(maxZ, 0)
     z_axis_slider_widget = vtk.vtkSliderWidget()
     z_axis_slider_widget.SetInteractor(renderer_window_interactor)
     z_axis_slider_widget.SetRepresentation(z_axis_slide_bar)
