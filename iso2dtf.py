@@ -55,31 +55,6 @@ def read_file(file_name):
         reader = None
     return reader
 
-# list of singleton values.
-def read_isovalues(file_name):
-    values = list()
-    with open(file_name) as file:
-        line = file.readline()
-        while line:
-            if not line.startswith("#"):
-                values.append(int(line))
-            line = file.readline()
-    return values
-
-# list of <value> <r> <g> <b>, separated by and space.
-def read_cmap(file_name):
-    values = list()
-    with open(file_name) as file:
-        line = file.readline()
-        while line:
-            if not line.startswith("#"):
-                arr = line.split(" ")
-                value, r, g, b = arr
-                rgb = [int(r)/255, int(g)/255, int(b)/255]                
-                values.append([int(value), rgb])
-            line = file.readline()
-    return values
-
 def generate_ctf(cmap):
     ctf = vtk.vtkColorTransferFunction()
     if(cmap):
