@@ -64,19 +64,7 @@ def read_file(file_name):
         reader = None
     return reader
 
-def generate_actors(data, val, clip):    
-    # contour
-    global iso
-    iso.SetInputConnection(data.GetOutputPort())
-    if(val):
-        iso.SetValue(0, val)    
-    else:
-        iso.SetValue(0, max/4)
-    
-    ctf = vtk.vtkColorTransferFunction()
-    ctf.AddRGBPoint(min, 31/255, 162/255, 255/255)
-    ctf.AddRGBPoint(max, 255/255, 251/255, 19/255)
-
+def generate_plane_origins(clip):
     # origins of the planes
     origins = vtk.vtkPoints()
     origins.SetNumberOfPoints(3)
@@ -95,8 +83,9 @@ def generate_actors(data, val, clip):
             origins.InsertPoint(2, [0, 0, clip[1]]) # z
         else:
             origins.InsertPoint(2, [0, 0, 0]) # z
-        
-    # normal of the planes
+    return origins
+
+def generate_plane_normals():
     normals = vtk.vtkDoubleArray()
     normals.SetNumberOfComponents(3)
     normals.SetNumberOfTuples(3)
@@ -104,25 +93,43 @@ def generate_actors(data, val, clip):
     normals.SetTuple(0, [1, 0, 0])
     normals.SetTuple(1, [0, 1, 0])
     normals.SetTuple(2, [0, 0, 1])
+    return normals
+    
+def generate_actors(data, val, clip):    
+    # contour
+    global iso
+    iso.SetInputConnection(data.GetOutputPort())
+    if(val):
+        iso.SetValue(0, val)    
+    else:
+        iso.SetValue(0, max/4)
+    
+    ctf = vtk.vtkColorTransferFunction()
+    ctf.AddRGBPoint(min, 31/255, 162/255, 255/255)
+    ctf.AddRGBPoint(max, 255/255, 251/255, 19/255)
+
+    # generate vtkPlanes stuff.
+    origins = generate_plane_origins(clip)
+    normals = generate_plane_normals()
 
     # the list of planes
     planes = vtk.vtkPlanes()
     planes.SetPoints(origins)
     planes.SetNormals(normals)
+    planes.GetPlane(0, xplane)
+    planes.GetPlane(1, yplane)
+    planes.GetPlane(2, zplane)
     
     xclipper = vtk.vtkClipPolyData()
     xclipper.SetInputConnection(iso.GetOutputPort())
-    planes.GetPlane(0, xplane)
     xclipper.SetClipFunction(xplane)
     
     yclipper = vtk.vtkClipPolyData()
     yclipper.SetInputConnection(xclipper.GetOutputPort())
-    planes.GetPlane(1, yplane)
     yclipper.SetClipFunction(yplane)
     
     zclipper = vtk.vtkClipPolyData()
     zclipper.SetInputConnection(yclipper.GetOutputPort())
-    planes.GetPlane(2, zplane)
     zclipper.SetClipFunction(zplane)
     
     
