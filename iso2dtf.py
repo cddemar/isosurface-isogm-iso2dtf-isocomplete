@@ -108,8 +108,6 @@ def generate_actors(data, gradient_magnitude, val, clip):
     else:
         iso.SetValue(0, max/4)
     
-    iso.SetValue(0, 1500)
-    
     #probe
     probe = vtk.vtkProbeFilter()
     probe.SetInputConnection(iso.GetOutputPort())
