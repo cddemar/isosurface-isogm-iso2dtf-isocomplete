@@ -86,7 +86,7 @@ def generate_plane_origins(clip):
             origins.InsertPoint(1, [0, 0, 0]) # y
             
         if(clip[2]):
-            origins.InsertPoint(2, [0, 0, clip[1]]) # z
+            origins.InsertPoint(2, [0, 0, clip[2]]) # z
         else:
             origins.InsertPoint(2, [0, 0, 0]) # z
     return origins
